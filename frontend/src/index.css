@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-space-dark text-white antialiased;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-xl;
+  }
+  
+  .btn-primary {
+    @apply bg-gradient-to-r from-nasa-blue to-blue-600 hover:from-nasa-blue/90 hover:to-blue-700 
+           text-white font-semibold py-3 px-6 rounded-lg shadow-lg 
+           transition-all duration-300 hover:shadow-xl hover:scale-105
+           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  }
+  
+  .btn-secondary {
+    @apply bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30
+           text-white font-semibold py-3 px-6 rounded-lg
+           transition-all duration-300 hover:shadow-lg
+           focus:outline-none focus:ring-2 focus:ring-white/50;
+  }
+  
+  .input-field {
+    @apply bg-white/5 backdrop-blur-sm border border-white/20 rounded-lg
+           px-4 py-3 text-white placeholder-gray-400
+           focus:outline-none focus:ring-2 focus:ring-nasa-blue focus:border-transparent
+           transition-all duration-300;
+  }
+  
+  .card-hover {
+    @apply transform transition-all duration-300 hover:scale-105 hover:shadow-2xl;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400;
+  }
+  
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 3s ease infinite;
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* NASA-style loading animations */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes orbit {
+  0% {
+    transform: rotate(0deg) translateX(64px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(64px) rotate(-360deg);
+  }
+}
+
+@keyframes orbit-reverse {
+  0% {
+    transform: rotate(360deg) translateX(64px) rotate(-360deg);
+  }
+  100% {
+    transform: rotate(0deg) translateX(64px) rotate(0deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+.animate-spin-reverse {
+  animation: spin-reverse 2s linear infinite;
+}
+
+.animate-orbit {
+  animation: orbit 4s linear infinite;
+}
+
+.animate-orbit-reverse {
+  animation: orbit-reverse 3s linear infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}

@@ -1,0 +1,71 @@
+{
+  "timestamp": "2025-10-05T16:00:53.459130",
+  "summary": {
+    "total": 12,
+    "passed": 12,
+    "failed": 0,
+    "success_rate": 100.0
+  },
+  "tests": [
+    {
+      "test": "API Health Check",
+      "passed": true,
+      "message": "Status: 200"
+    },
+    {
+      "test": "Location Search",
+      "passed": true,
+      "message": "Found 2 locations"
+    },
+    {
+      "test": "Weather Analysis - Very Hot",
+      "passed": true,
+      "message": "Risk: high"
+    },
+    {
+      "test": "Weather Analysis - Very Cold",
+      "passed": true,
+      "message": "Status: 200"
+    },
+    {
+      "test": "Weather Analysis - Very Windy",
+      "passed": true,
+      "message": "Status: 200"
+    },
+    {
+      "test": "Weather Analysis - Very Wet",
+      "passed": true,
+      "message": "Status: 200"
+    },
+    {
+      "test": "Weather Analysis - Very Uncomfortable",
+      "passed": true,
+      "message": "Status: 200"
+    },
+    {
+      "test": "Multiple Conditions Analysis",
+      "passed": true,
+      "message": "Analyzed 2 conditions"
+    },
+    {
+      "test": "Historical Data Range (1980-present)",
+      "passed": true,
+      "message": "Years analyzed: 45"
+    },
+    {
+      "test": "Probability Calculation",
+      "passed": true,
+      "message": "Probability: 70.0%"
+    },
+    {
+      "test": "Trend Analysis (Historical Data)",
+      "passed": true,
+      "message": "25 years | Trend: decreasing"
+    },
+    {
+      "test": "CORS Configuration",
+      "passed": true,
+      "message": "CORS: http://localhost:3000"
+    }
+  ]
+}
