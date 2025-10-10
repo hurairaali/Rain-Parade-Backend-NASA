@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import logging
 from datetime import datetime
-
+import uvicorn
 from api.routes import weather, location
 
 # Configure logging
@@ -86,15 +86,11 @@ async def global_exception_handler(request, exc):
 
 
 if __name__ == "__main__":
-    import uvicorn
-    import os
-    
-    port = int(os.environ.get("PORT", 8000))
     
     uvicorn.run(
-        "main:app",
+        app,
         host="0.0.0.0",
-        port=port,
+        port=8080,
         reload=True,
         log_level="info"
     )

@@ -19,5 +19,5 @@ ENV PORT 8080
 # Expose the port defined by the PORT environment variable
 EXPOSE $PORT
 
-# Command to run the application
-CMD ["python", "main.py"]
+# Command to run the application using Uvicorn, using the PORT environment variable
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port $PORT"]
