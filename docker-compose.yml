@@ -1,0 +1,10 @@
+version: '3'
+services:
+  zaplead-ai-sdr:
+    build: .
+    container_name: zaplead-ai-sdr
+    restart: always
+    ports:
+      - "8080:8080"  # Maps FastAPI port to host
+    env_file:
+      - .env          # Loads environment variables from .env
