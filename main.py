@@ -8,6 +8,7 @@ from fastapi.responses import JSONResponse
 import logging
 from datetime import datetime
 import uvicorn
+import os
 from api.routes import weather, location
 
 # Configure logging
@@ -27,16 +28,13 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
+# Get CORS origins from environment variable
+cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:3001,http://localhost:5173").split(",")
+
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:3001",
-        "http://localhost:5173",
-        "http://192.168.100.15:3000",
-        "http://192.168.100.15:3001"
-    ],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
