@@ -19,6 +19,30 @@
 
 Unlike weather forecasts, Rain Parade provides **probability analysis** based on decades of historical data, helping you understand what the weather has been like historically for any location and date.
 
+## 🏆 Achievements
+
+<div align="center">
+
+![Global Nominee](https://img.shields.io/badge/🌟_Global_Nominee-NASA_Space_Apps_2025-0B3D91?style=for-the-badge)
+![Galactic Problem Solver](https://img.shields.io/badge/🎖️_Galactic_Problem_Solver-Outstanding_Participation-FFD700?style=for-the-badge)
+
+**2025 NASA Space Apps Challenge**
+- 🌟 **Global Nominee** - Universal Event (October 4-5, 2025)
+- 🎖️ **Galactic Problem Solver** - Outstanding Participation Certificate (October 4-5, 2025)
+- 🚀 **Challenge**: "Will It Rain On My Parade?"
+
+### 🌟 Global Nominees Badge
+
+![Global Nominees 2025](./assets/[Local%20Lead%20Use]%202025%20NASA%20Space%20Apps%20Global%20Nominees%20Graphic.png)
+
+### 🎖️ Galactic Problem Solver Certificate
+
+![Galactic Problem Solver Certificate](./assets/certificate_huraira_114_2025__n_a_s_a__space__apps__challenge.jpeg)
+
+</div>
+
+---
+
 ## ✨ Features
 
 ### 🎯 Core Functionality

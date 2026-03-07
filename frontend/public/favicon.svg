@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Sky gradient background -->
+  <defs>
+    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="url(#skyGradient)"/>
+  
+  <!-- Cloud -->
+  <ellipse cx="35" cy="35" rx="15" ry="10" fill="#ffffff"/>
+  <ellipse cx="50" cy="32" rx="18" ry="12" fill="#ffffff"/>
+  <ellipse cx="65" cy="35" rx="15" ry="10" fill="#ffffff"/>
+  
+  <!-- Rain drops -->
+  <path d="M 35 50 L 35 65 Q 35 68, 37 68 Q 39 68, 39 65 L 39 50" fill="#60a5fa"/>
+  <path d="M 50 55 L 50 70 Q 50 73, 52 73 Q 54 73, 54 70 L 54 55" fill="#60a5fa"/>
+  <path d="M 65 50 L 65 65 Q 65 68, 67 68 Q 69 68, 69 65 L 69 50" fill="#60a5fa"/>
+  
+  <!-- NASA-style arc at bottom -->
+  <path d="M 20 80 Q 50 85, 80 80" stroke="#ffffff" stroke-width="2" fill="none"/>
+</svg>
+
+
+
+
+
+
+
