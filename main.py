@@ -35,9 +35,7 @@ app.add_middleware(
         "http://localhost:3001",
         "http://localhost:5173",
         "http://192.168.100.15:3000",
-        "http://192.168.100.15:3001",
-        "https://rain-parade-frontend-nasa.vercel.app",
-        "https://rain-parade.vercel.app"
+        "http://192.168.100.15:3001"
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -88,14 +86,11 @@ async def global_exception_handler(request, exc):
 
 
 if __name__ == "__main__":
-    import os
-    
-    port = int(os.environ.get("PORT", 8000))
     
     uvicorn.run(
-        "main:app",
+        app,
         host="0.0.0.0",
-        port=port,
+        port=8080,
         reload=True,
         log_level="info"
     )
