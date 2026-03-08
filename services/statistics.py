@@ -81,7 +81,7 @@ class StatisticsService:
             Dictionary with trend info
         """
         if df.empty or len(df) < 2:
-            return {"slope": 0, "trend": "stable", "r_squared": 0}
+            return {"slope": 0, "trend": "fluctuating", "r_squared": 0}
         
         df = df.copy()
         df["year"] = df["date"].dt.year
@@ -92,25 +92,33 @@ class StatisticsService:
         
         try:
             slope, intercept, r_value, p_value, std_err = stats.linregress(years, values)
-            
-            # Determine trend direction
-            if abs(slope) < 0.01:  # Negligible slope
-                trend = "stable"
+            r_squared = float(r_value ** 2)
+
+            # Treat as "fluctuating" when linear trend is weak or not statistically significant:
+            # - slope near zero, or
+            # - linear model explains little variance (low R²), or
+            # - slope not statistically significant (p > 0.05)
+            slope_near_zero = abs(slope) < 0.02
+            weak_fit = r_squared < 0.15
+            not_significant = p_value > 0.05
+
+            if slope_near_zero or weak_fit or not_significant:
+                trend = "fluctuating"
             elif slope > 0:
                 trend = "increasing"
             else:
                 trend = "decreasing"
-            
+
             return {
                 "slope": float(slope),
                 "intercept": float(intercept),
-                "r_squared": float(r_value ** 2),
+                "r_squared": r_squared,
                 "p_value": float(p_value),
                 "trend": trend
             }
         except Exception as e:
             logger.error(f"Trend calculation error: {e}")
-            return {"slope": 0, "trend": "stable", "r_squared": 0}
+            return {"slope": 0, "trend": "fluctuating", "r_squared": 0}
     
     @staticmethod
     def calculate_risk_level(probabilities: List[float]) -> str:
@@ -186,13 +194,14 @@ class StatisticsService:
             prob_text = "very high"
             recommendation = f"Expect {condition_name} conditions - historical data shows frequent occurrence."
         
-        # Trend analysis
+        # Trend analysis (only claim increasing/decreasing when linear trend is clear and significant)
         if trend == "increasing":
             trend_text = f"Historical data shows an increasing trend, suggesting {condition_text} are becoming more common over time."
         elif trend == "decreasing":
             trend_text = f"Historical data shows a decreasing trend, suggesting {condition_text} are becoming less common over time."
         else:
-            trend_text = f"Historical data shows stable conditions with no significant trend over time."
+            # fluctuating or stable: avoid claiming a clear trend when data is variable
+            trend_text = f"Historical data shows fluctuations with no clear long-term trend; {condition_text} are common for this date."
         
         return (f"**{condition_name} Conditions**: There is a {prob_text} likelihood ({probability:.1f}%) of {condition_text}. "
                 f"{recommendation} {trend_text} "
