@@ -7,7 +7,7 @@ import logging
 from datetime import datetime
 
 from models.schemas import (
-    QueryParams, WeatherResults, ProbabilityData, 
+    QueryParams, WeatherResults, ProbabilityData,
     TrendData, WeatherMetadata, APIResponse
 )
 from services.nasa_power import nasa_power_service
@@ -15,6 +15,34 @@ from services.statistics import statistics_service
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/weather", tags=["weather"])
+
+# NASA POWER returns temperatures in Celsius; frontend may send thresholds in °F
+TEMP_CONDITIONS = ("hot", "cold")
+
+
+def _is_fahrenheit(unit: str) -> bool:
+    """Return True if unit is Fahrenheit."""
+    if not unit:
+        return False
+    u = unit.strip().upper()
+    return u == "°F" or "F" in u and "C" not in u
+
+
+def _threshold_to_celsius(value: float, unit: str) -> float:
+    """Convert threshold to Celsius when unit is Fahrenheit. Otherwise return value unchanged."""
+    if _is_fahrenheit(unit):
+        return (value - 32.0) * 5.0 / 9.0
+    return value
+
+
+def _celsius_to_fahrenheit(c: float) -> float:
+    """Convert Celsius to Fahrenheit."""
+    return (c * 9.0 / 5.0) + 32.0
+
+
+def _std_celsius_to_fahrenheit(std_c: float) -> float:
+    """Convert standard deviation from Celsius to Fahrenheit (scale by 9/5)."""
+    return std_c * 9.0 / 5.0
 
 
 @router.post("/analyze", response_model=WeatherResults)
@@ -50,7 +78,14 @@ async def analyze_weather(query: QueryParams):
             
             condition = threshold_obj.condition
             threshold_value = threshold_obj.value
-            
+            unit = threshold_obj.unit or ""
+
+            # Use threshold in Celsius for probability (NASA POWER data is in Celsius)
+            if condition in TEMP_CONDITIONS:
+                threshold_for_calc = _threshold_to_celsius(threshold_value, unit)
+            else:
+                threshold_for_calc = threshold_value
+
             # Get historical data from NASA POWER
             df = nasa_power_service.get_data_for_condition(
                 location.latitude,
@@ -77,46 +112,64 @@ async def analyze_weather(query: QueryParams):
                 continue
             
             values = day_data[parameter].dropna()
-            
-            # Calculate statistics
+
+            # Calculate statistics (NASA data is in Celsius for temp conditions)
             stats = statistics_service.calculate_basic_stats(values)
-            
-            # Calculate probability
+
+            # Probability: compare in Celsius
             probability = statistics_service.calculate_probability(
-                values, threshold_value, condition
+                values, threshold_for_calc, condition
             )
-            
+
             # Calculate trend
             trend_info = statistics_service.calculate_trend(day_data, parameter)
-            
-            # Create probability data
+
+            # For temperature conditions with °F output, convert stats to Fahrenheit
+            mean_display = stats.get("mean", 0)
+            median_display = stats.get("median", 0)
+            std_display = stats.get("std", 0)
+            p25 = stats.get("percentile25", 0)
+            p75 = stats.get("percentile75", 0)
+            p90 = stats.get("percentile90", 0)
+            if condition in TEMP_CONDITIONS and _is_fahrenheit(unit):
+                mean_display = _celsius_to_fahrenheit(mean_display)
+                median_display = _celsius_to_fahrenheit(median_display)
+                std_display = _std_celsius_to_fahrenheit(std_display)
+                p25 = _celsius_to_fahrenheit(p25)
+                p75 = _celsius_to_fahrenheit(p75)
+                p90 = _celsius_to_fahrenheit(p90)
+
+            # Create probability data (values in requested unit)
             prob_data = ProbabilityData(
                 condition=condition,
                 probability=probability,
-                mean=stats.get("mean", 0),
-                median=stats.get("median", 0),
-                stdDev=stats.get("std", 0),
-                percentile25=stats.get("percentile25", 0),
-                percentile75=stats.get("percentile75", 0),
-                percentile90=stats.get("percentile90", 0)
+                mean=mean_display,
+                median=median_display,
+                stdDev=std_display,
+                percentile25=p25,
+                percentile75=p75,
+                percentile90=p90
             )
             probabilities.append(prob_data)
-            
-            # Create trend data for each year
+
+            # Trend values in requested unit for display
             for _, row in day_data.iterrows():
+                val = float(row[parameter])
+                if condition in TEMP_CONDITIONS and _is_fahrenheit(unit):
+                    val = _celsius_to_fahrenheit(val)
                 trends.append(TrendData(
                     year=row["date"].year,
-                    value=float(row[parameter]),
+                    value=val,
                     condition=condition
                 ))
-            
-            # Generate summary
+
+            # Summary: mean_display and unit so displayed value matches unit
             summary = statistics_service.generate_summary(
                 condition,
                 probability,
                 trend_info["trend"],
-                stats.get("mean", 0),
-                threshold_obj.unit
+                mean_display,
+                unit
             )
             all_summaries.append(summary)
         
