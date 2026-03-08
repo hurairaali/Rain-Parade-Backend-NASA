@@ -58,12 +58,12 @@ class StatisticsService:
         if values.empty:
             return 0.0
         
-        # For cold, we want probability of being BELOW threshold
+        # For cold, we want probability of being at or below threshold
         if condition == 'cold':
-            count = (values < threshold).sum()
+            count = (values <= threshold).sum()
         else:
-            # For hot, windy, wet, uncomfortable - probability of exceeding
-            count = (values > threshold).sum()
+            # For hot, windy, wet, uncomfortable - probability of at or above threshold
+            count = (values >= threshold).sum()
         
         probability = (count / len(values)) * 100
         return float(probability)
